@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Client Application — Strength Realized</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink:        #d4a8b0;
+    --pink-mid:    #c49aa2;
+    --pink-dark:   #a07880;
+    --pink-light:  #f5eaec;
+    --pink-pale:   #fdf6f7;
+    --gray:        #9aa0a8;
+    --gray-mid:    #c8cdd3;
+    --gray-light:  #eef0f2;
+    --gray-pale:   #f7f8f9;
+    --border:      #e2d8da;
+    --border-mid:  #cec4c7;
+    --text:        #2e2a2b;
+    --text-mid:    #6e6468;
+    --text-light:  #a89ea2;
+    --bg:          #faf8f8;
+    --white:       #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    background: linear-gradient(160deg, #f7eef0 0%, #f0edf1 30%, #eaecf0 65%, #f2eef0 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #f9eef1 0%, #f2edf4 40%, #e8ecf1 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 2rem 2.5rem;
+    text-align: center;
+  }
+
+  .brand-mark {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--pink-dark);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .brand-mark::before,
+  .brand-mark::after {
+    content: '';
+    width: 36px;
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent, var(--pink-mid));
+  }
+  .brand-mark::after {
+    background: linear-gradient(90deg, var(--pink-mid), transparent);
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 50px);
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    background: linear-gradient(120deg, var(--pink-dark), var(--gray));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 14px;
+    color: var(--text-mid);
+    max-width: 460px;
+    margin: 0 auto;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  /* ── Layout ── */
+  .form-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ── Progress ── */
+  .progress-bar {
+    height: 2px;
+    background: var(--gray-light);
+    border-radius: 2px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pink-mid), var(--gray));
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Section cards ── */
+  .section {
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 0.5px solid var(--border);
+    border-radius: 18px;
+    padding: 1.75rem 1.75rem 1.5rem;
+    margin-bottom: 1.25rem;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .section:focus-within {
+    box-shadow: 0 6px 32px rgba(196, 154, 162, 0.12);
+    border-color: var(--border-mid);
+  }
+
+  .section-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--pink-dark);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ── Fields ── */
+  .field { margin-bottom: 1.15rem; }
+  .field:last-child { margin-bottom: 0; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  label.field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+
+  .field-hint {
+    display: block;
+    font-size: 11px;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    font-weight: 300;
+  }
+
+  input[type=text],
+  input[type=email],
+  input[type=number],
+  select,
+  textarea {
+    width: 100%;
+    background: linear-gradient(135deg, #fdf8f9 0%, #f8f8fb 100%);
+    border: 0.5px solid var(--border-mid);
+    border-radius: 9px;
+    padding: 10px 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c49aa2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    padding-right: 36px;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--pink-mid);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(196, 154, 162, 0.14);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 88px;
+    line-height: 1.65;
+  }
+
+  /* ── Check / radio items ── */
+  .check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 4px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 9px 13px;
+    border: 0.5px solid var(--border);
+    border-radius: 9px;
+    background: linear-gradient(135deg, #fdf8f9 0%, #f8f8fb 100%);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .check-item:hover {
+    border-color: var(--pink-mid);
+    background: linear-gradient(135deg, #fceef1 0%, #f2eef6 100%);
+  }
+
+  .check-item input[type=checkbox],
+  .check-item input[type=radio] {
+    width: 15px;
+    height: 15px;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--pink-dark);
+    cursor: pointer;
+  }
+
+  .check-item input[type=checkbox]:focus,
+  .check-item input[type=radio]:focus {
+    box-shadow: none;
+    border: none;
+  }
+
+  .check-text {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 300;
+    line-height: 1.45;
+  }
+
+  /* ── Scale ── */
+  .scale-row {
+    display: flex;
+    gap: 5px;
+    margin-top: 6px;
+  }
+
+  .scale-btn {
+    flex: 1;
+    padding: 9px 2px;
+    border: 0.5px solid var(--border-mid);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fdf8f9 0%, #f5f5f9 100%);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+
+  .scale-btn:hover { border-color: var(--pink-mid); color: var(--pink-dark); background: linear-gradient(135deg, #fceef1 0%, #eeecf4 100%); }
+  .scale-btn.active { background: linear-gradient(135deg, var(--pink-mid), var(--gray)); border-color: transparent; color: #fff; font-weight: 500; }
+
+  .scale-ends { display: flex; justify-content: space-between; margin-top: 5px; }
+  .scale-ends span { font-size: 10px; color: var(--text-light); }
+
+  /* ── Package cards ── */
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 6px;
+  }
+
+  .pkg-card {
+    position: relative;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1rem 1rem;
+    background: linear-gradient(160deg, #fdf8f9 0%, #f8f8fb 100%);
+    cursor: pointer;
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+    user-select: none;
+  }
+
+  .pkg-card:hover {
+    border-color: var(--pink-mid);
+    background: linear-gradient(160deg, #fceef1 0%, #f2eef6 100%);
+    box-shadow: 0 4px 20px rgba(196, 154, 162, 0.14);
+  }
+
+  .pkg-card.selected {
+    border-color: var(--pink-dark);
+    background: linear-gradient(160deg, #fbe8ec 0%, #ede8f4 100%);
+    box-shadow: 0 6px 28px rgba(160, 120, 128, 0.18);
+  }
+
+  .pkg-card input[type=radio] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .pkg-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--pink-mid), var(--gray));
+    color: #fff;
+  }
+
+  .pkg-badge.hidden { visibility: hidden; }
+
+  .pkg-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .pkg-tagline {
+    font-size: 10px;
+    color: var(--text-light);
+    font-weight: 300;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  .pkg-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--pink-dark);
+    margin-bottom: 2px;
+  }
+
+  .pkg-price span {
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: var(--text-light);
+  }
+
+  .pkg-sessions {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-mid);
+    margin-bottom: 10px;
+  }
+
+  .pkg-divider {
+    height: 0.5px;
+    background: var(--border);
+    margin: 10px 0;
+  }
+
+  .pkg-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .pkg-features li {
+    font-size: 11px;
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.45;
+    padding: 3px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .pkg-features li::before {
+    content: '–';
+    color: var(--pink-mid);
+    flex-shrink: 0;
+    font-size: 11px;
+    margin-top: 0px;
+  }
+
+  .pkg-check {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-mid), var(--gray));
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pkg-check svg {
+    width: 10px;
+    height: 10px;
+    stroke: #fff;
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pkg-card.selected .pkg-check { display: flex; }
+
+  .pkg-unsure {
+    margin-top: 8px;
+    border: 0.5px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 13px;
+    background: linear-gradient(135deg, #fdf8f9 0%, #f8f8fb 100%);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    transition: border-color 0.15s;
+  }
+
+  .pkg-unsure:hover { border-color: var(--pink-mid); }
+  .pkg-unsure input { accent-color: var(--pink-dark); width: 15px; height: 15px; }
+  .pkg-unsure span { font-size: 13px; color: var(--text-mid); font-weight: 300; }
+
+  /* ── Submit ── */
+  .submit-wrap { margin-top: 2rem; text-align: center; }
+
+  .btn-submit {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--pink-mid) 0%, var(--gray) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    padding: 14px 52px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    box-shadow: 0 4px 20px rgba(196, 154, 162, 0.3);
+  }
+
+  .btn-submit:hover { opacity: 0.88; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .submit-note {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+
+  /* ── Success ── */
+  #success-page {
+    display: none;
+    text-align: center;
+    padding: 4.5rem 2rem;
+  }
+
+  .success-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-light), var(--gray-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 4px 16px rgba(196, 154, 162, 0.2);
+  }
+
+  .success-icon svg { width: 22px; height: 22px; stroke: var(--pink-dark); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  #success-page h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  #success-page p {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.75;
+    max-width: 400px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 11px;
+    color: var(--text-light);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    background: rgba(255,255,255,0.5);
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 600px) {
+    .hero { padding: 2.5rem 1.25rem 2rem; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .section { padding: 1.4rem 1.2rem; }
+    .scale-btn { font-size: 11px; padding: 8px 1px; }
+    .packages-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="brand-mark">Strength Realized</div>
+  <h1>Client<br /><em>Application</em></h1>
+  <p>Tell us where you are and where you want to go. This helps us understand if we're the right fit for each other.</p>
+</div>
+
+<div class="form-container">
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+  <!--
+    ════════════════════════════════════════
+    HOW TO ACTIVATE EMAIL DELIVERY
+    ════════════════════════════════════════
+    1. Go to https://formspree.io and sign up (free)
+    2. Create a new form → enter strengthrealizedmethod@gmail.com
+    3. Copy your unique form ID (looks like: xyzabcde)
+    4. Replace YOUR_FORMSPREE_ID below with that ID
+    5. Upload this file or share via Tiiny.host
+    Every submission lands directly in your Gmail.
+    ════════════════════════════════════════
+  -->
+
+  <form id="intake-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" novalidate>
+
+    <!-- SECTION 1: About You -->
+    <div class="section">
+      <div class="section-label">About You</div>
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-label" for="fname">First name *</label>
+          <input type="text" id="fname" name="First Name" required placeholder="Your first name" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="lname">Last name</label>
+          <input type="text" id="lname" name="Last Name" placeholder="Your last name" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-label" for="email">Email address *</label>
+          <input type="email" id="email" name="Email" required placeholder="you@email.com" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="age">Age</label>
+          <input type="number" id="age" name="Age" placeholder="e.g. 47" min="30" max="80" />
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="referral">How did you find us?</label>
+        <select id="referral" name="How They Found Us">
+          <option value="" disabled selected>Select one</option>
+          <option>Instagram</option>
+          <option>TikTok</option>
+          <option>Facebook</option>
+          <option>Pinterest</option>
+          <option>YouTube</option>
+          <option>Friend or family referral</option>
+          <option>Google search</option>
+          <option>Podcast</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Current Reality -->
+    <div class="section">
+      <div class="section-label">Your Current Reality</div>
+      <div class="field">
+        <label class="field-label">What's your current activity level?</label>
+        <div class="check-group">
+          <label class="check-item"><input type="radio" name="Activity Level" value="Mostly sedentary" /><span class="check-text">Mostly sedentary — I'm not moving much right now</span></label>
+          <label class="check-item"><input type="radio" name="Activity Level" value="Lightly active" /><span class="check-text">Lightly active — some walks or light movement</span></label>
+          <label class="check-item"><input type="radio" name="Activity Level" value="Moderately active" /><span class="check-text">Moderately active — working out inconsistently</span></label>
+          <label class="check-item"><input type="radio" name="Activity Level" value="Regularly active" /><span class="check-text">Regularly active — training consistently but not getting results</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">What are you struggling with most?</label>
+        <span class="field-hint">Select all that apply</span>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" name="Struggles" value="Weight gain despite doing everything right" /><span class="check-text">Weight gain despite doing "everything right"</span></label>
+          <label class="check-item"><input type="checkbox" name="Struggles" value="Belly fat or body composition changes" /><span class="check-text">Belly fat or body composition changes</span></label>
+          <label class="check-item"><input type="checkbox" name="Struggles" value="Low energy or chronic exhaustion" /><span class="check-text">Low energy or chronic exhaustion</span></label>
+          <label class="check-item"><input type="checkbox" name="Struggles" value="Bloating or inflammation" /><span class="check-text">Bloating or inflammation</span></label>
+          <label class="check-item"><input type="checkbox" name="Struggles" value="Hormonal changes affecting body and mood" /><span class="check-text">Hormonal changes affecting my body and mood</span></label>
+          <label class="check-item"><input type="checkbox" name="Struggles" value="Feeling disconnected from my body" /><span class="check-text">Feeling disconnected from my body</span></label>
+          <label class="check-item"><input type="checkbox" name="Struggles" value="Muscle loss or feeling weaker" /><span class="check-text">Muscle loss or feeling weaker than I used to</span></label>
+          <label class="check-item"><input type="checkbox" name="Struggles" value="Not knowing what approach to trust" /><span class="check-text">Not knowing what approach to actually trust anymore</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="strength-exp">Have you tried strength training before?</label>
+        <select id="strength-exp" name="Strength Training Experience">
+          <option value="" disabled selected>Select one</option>
+          <option>No — this would be new for me</option>
+          <option>A little — I've dabbled but nothing consistent</option>
+          <option>Yes — I've done it on and off over the years</option>
+          <option>Yes — I currently train but want better guidance</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">What equipment do you have access to?</label>
+        <span class="field-hint">Select all that apply</span>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" name="Equipment" value="Dumbbells at home" /><span class="check-text">Dumbbells at home</span></label>
+          <label class="check-item"><input type="checkbox" name="Equipment" value="Full gym membership" /><span class="check-text">Full gym membership</span></label>
+          <label class="check-item"><input type="checkbox" name="Equipment" value="Resistance bands" /><span class="check-text">Resistance bands</span></label>
+          <label class="check-item"><input type="checkbox" name="Equipment" value="Minimal or no equipment" /><span class="check-text">Minimal or no equipment right now</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Goals -->
+    <div class="section">
+      <div class="section-label">Your Goals</div>
+      <div class="field">
+        <label class="field-label">What matters most to you right now?</label>
+        <span class="field-hint">Select your top 1-2</span>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" name="Goals" value="Build real visible muscle" /><span class="check-text">Build real, visible muscle</span></label>
+          <label class="check-item"><input type="checkbox" name="Goals" value="Support metabolism and feel less stuck" /><span class="check-text">Support my metabolism and feel less stuck</span></label>
+          <label class="check-item"><input type="checkbox" name="Goals" value="More energy and feel like myself again" /><span class="check-text">Have more energy and feel like myself again</span></label>
+          <label class="check-item"><input type="checkbox" name="Goals" value="Train smarter not just harder" /><span class="check-text">Understand how to train smarter — not just harder</span></label>
+          <label class="check-item"><input type="checkbox" name="Goals" value="Age powerfully and stay strong long term" /><span class="check-text">Age powerfully and stay strong for the long term</span></label>
+          <label class="check-item"><input type="checkbox" name="Goals" value="Stop yo-yo cycle and build sustainable habits" /><span class="check-text">Stop the yo-yo cycle and build sustainable habits</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="sixmonths">Where do you want to be in 6 months?</label>
+        <span class="field-hint">In your own words — no right or wrong answer</span>
+        <textarea id="sixmonths" name="6-Month Vision" placeholder="Describe how you want to feel, what you want to be capable of, what you want your routine to look like..."></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 4: Choose Your Program -->
+    <div class="section">
+      <div class="section-label">Choose Your Program</div>
+      <div class="field">
+        <label class="field-label">Which package feels right for you?</label>
+        <span class="field-hint">All programs are structured as a 6-month process. Your rate stays consistent for the full term.</span>
+
+        <div class="packages-grid" id="packages-grid">
+
+          <!-- Real Foundations -->
+          <label class="pkg-card" onclick="selectPkg(this, 'Real Foundations ($397/month)')">
+            <input type="radio" name="Selected Package" value="Real Foundations ($397/month)" />
+            <div class="pkg-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="pkg-badge hidden">placeholder</div>
+            <div class="pkg-name">Real Foundations</div>
+            <div class="pkg-tagline">Build the base. Master the fundamentals.</div>
+            <div class="pkg-price">$397<span>/month</span></div>
+            <div class="pkg-sessions">1 weekly 1:1 virtual session</div>
+            <div class="pkg-divider"></div>
+            <ul class="pkg-features">
+              <li>30-min goal setting call</li>
+              <li>Personalized calories + macros</li>
+              <li>Weekly progress review</li>
+              <li>Photos and metrics tracking</li>
+              <li>Custom meal plan + grocery list</li>
+              <li>Personalized supplement guidance</li>
+              <li>Intro to movement program</li>
+              <li>2 custom written workouts weekly</li>
+            </ul>
+          </label>
+
+          <!-- Real Strength -->
+          <label class="pkg-card" onclick="selectPkg(this, 'Real Strength ($597/month)')">
+            <input type="radio" name="Selected Package" value="Real Strength ($597/month)" />
+            <div class="pkg-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="pkg-badge">Most Popular</div>
+            <div class="pkg-name">Real Strength</div>
+            <div class="pkg-tagline">Train with structure. Progress with purpose.</div>
+            <div class="pkg-price">$597<span>/month</span></div>
+            <div class="pkg-sessions">3 weekly 1:1 virtual sessions</div>
+            <div class="pkg-divider"></div>
+            <ul class="pkg-features">
+              <li>Everything in Real Foundations</li>
+              <li>Customized restorative stretching program</li>
+            </ul>
+          </label>
+
+          <!-- Real Strength Elite -->
+          <label class="pkg-card" onclick="selectPkg(this, 'Strength Realized Elite ($997/month)')">
+            <input type="radio" name="Selected Package" value="Strength Realized Elite ($997/month)" />
+            <div class="pkg-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <div class="pkg-badge hidden">placeholder</div>
+            <div class="pkg-name">Strength Realized Elite</div>
+            <div class="pkg-tagline">High-touch coaching. High accountability.</div>
+            <div class="pkg-price">$997<span>/month</span></div>
+            <div class="pkg-sessions">4 weekly 1:1 virtual sessions</div>
+            <div class="pkg-divider"></div>
+            <ul class="pkg-features">
+              <li>Everything in Real Foundations</li>
+              <li>1 custom written workout weekly</li>
+              <li>Weekly 10-min core finisher</li>
+              <li>Maximum support, structure & accountability</li>
+            </ul>
+          </label>
+
+        </div>
+
+        <!-- Not sure option -->
+        <label class="pkg-unsure" onclick="selectUnsure(this)">
+          <input type="radio" name="Selected Package" value="Not sure yet" id="pkg-unsure-radio" />
+          <span>I'm not sure yet — I'd like to talk it through with Liz</span>
+        </label>
+
+        <input type="hidden" id="pkg-hidden" name="Selected Package (confirmed)" value="" />
+      </div>
+    </div>
+
+    <!-- SECTION 5: Readiness -->
+    <div class="section">
+      <div class="section-label">Readiness & Mindset</div>
+      <div class="field">
+        <label class="field-label">How committed do you feel to making a real change right now?</label>
+        <div class="scale-row" id="commitment-scale">
+          <button type="button" class="scale-btn" onclick="setScale(this)">1</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">2</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">3</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">4</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">5</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">6</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">7</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">8</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">9</button>
+          <button type="button" class="scale-btn" onclick="setScale(this)">10</button>
+        </div>
+        <div class="scale-ends"><span>Not sure yet</span><span>100% ready</span></div>
+        <input type="hidden" id="commitment-value" name="Commitment Level" value="" />
+      </div>
+      <div class="field">
+        <label class="field-label">Have you invested in coaching or a program before?</label>
+        <div class="check-group">
+          <label class="check-item"><input type="radio" name="Prior Investment" value="No - first time" /><span class="check-text">No — this would be my first time</span></label>
+          <label class="check-item"><input type="radio" name="Prior Investment" value="Yes - programs or apps" /><span class="check-text">Yes — I've bought programs or apps before</span></label>
+          <label class="check-item"><input type="radio" name="Prior Investment" value="Yes - worked with a coach" /><span class="check-text">Yes — I've worked with a coach before</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="barriers">Is there anything that might get in your way?</label>
+        <span class="field-hint">Time, schedule, budget, mindset — be honest, this helps us support you better</span>
+        <textarea id="barriers" name="Potential Barriers" placeholder="e.g. I have a really busy schedule, I've struggled with consistency before..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="extra">Anything else you want Liz to know?</label>
+        <span class="field-hint">Your story matters — share anything that feels important</span>
+        <textarea id="extra" name="Additional Notes" placeholder="Your story, your hesitations, what you're hoping this could be..."></textarea>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" class="btn-submit" id="submit-btn">Submit My Application</button>
+      <p class="submit-note">We'll be in touch within 24–48 hours to confirm next steps.<br />Your information is kept private and never shared.</p>
+    </div>
+
+  </form>
+
+  <div id="success-page">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <h2>Application received.</h2>
+    <p>Thank you for taking the time to share your story with us. Liz or a member of her team will be in touch within 24–48 hours.<br /><br />We look forward to connecting with you.</p>
+  </div>
+
+</div>
+
+<div class="footer">© Strength Realized LLC &nbsp;·&nbsp; Real strength for women navigating midlife.</div>
+
+<script>
+  function selectPkg(card, value) {
+    document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.pkg-unsure').forEach(u => u.style.borderColor = '');
+    card.classList.add('selected');
+    card.querySelector('input[type=radio]').checked = true;
+    document.getElementById('pkg-hidden').value = value;
+    updateProgress();
+  }
+
+  function selectUnsure(el) {
+    document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('pkg-unsure-radio').checked = true;
+    document.getElementById('pkg-hidden').value = 'Not sure yet';
+    el.style.borderColor = 'var(--pink-mid)';
+    updateProgress();
+  }
+
+  function setScale(btn) {
+    document.querySelectorAll('#commitment-scale .scale-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('commitment-value').value = btn.textContent + '/10';
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const required = document.getElementById('intake-form').querySelectorAll('[required]');
+    let filled = 0;
+    required.forEach(el => { if (el.value.trim() !== '') filled++; });
+    document.getElementById('progress').style.width = Math.round((filled / required.length) * 100) + '%';
+  }
+
+  document.getElementById('intake-form').addEventListener('input', updateProgress);
+
+  document.getElementById('intake-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const fname = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (!fname) { alert('Please enter your first name.'); document.getElementById('fname').focus(); return; }
+    if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); document.getElementById('email').focus(); return; }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    try {
+      const res = await fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        document.getElementById('intake-form').style.display = 'none';
+        document.querySelector('.progress-bar').style.display = 'none';
+        document.getElementById('success-page').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Submit My Application';
+        alert('Something went wrong. Please try again or email strengthrealizedmethod@gmail.com directly.');
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Submit My Application';
+      alert('Connection error. Please try again or email strengthrealizedmethod@gmail.com directly.');
+    }
+  });
+</script>
+</body>
+</html>
